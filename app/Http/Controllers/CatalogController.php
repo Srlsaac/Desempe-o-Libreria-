@@ -15,10 +15,12 @@ class CatalogController extends Controller
         $books = Book::with(['author', 'category'])
             ->where('active', true)
             ->when($search, function ($query, $search) {
-                $query->where(function ($q) use ($search) {
-                    $q->where('title', 'like', "%{$search}%")
-                        ->orWhereHas('author', function ($a) use ($search) {
-                            $a->where('name', 'like', "%{$search}%");
+                $term = '%'.mb_strtolower($search).'%';
+
+                $query->where(function ($q) use ($term) {
+                    $q->whereRaw('LOWER(title) LIKE ?', [$term])
+                        ->orWhereHas('author', function ($a) use ($term) {
+                            $a->whereRaw('LOWER(name) LIKE ?', [$term]);
                         });
                 });
             })
