@@ -25,8 +25,7 @@
                     <tr>
                         <td>
                             @if ($book->cover_image)
-                                <img src="{{ asset('storage/'.$book->cover_image) }}" alt="Portada"
-                                     style="width: 50px; height: 70px; object-fit: cover;">
+                                <img src="{{ asset('storage/'.$book->cover_image) }}" alt="Portada" class="thumb-cover">
                             @else
                                 <span class="text-muted">Sin portada</span>
                             @endif

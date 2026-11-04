@@ -1,47 +1,67 @@
-<x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+@extends('layouts.bootstrap')
 
-    <form method="POST" action="{{ route('login') }}">
-        @csrf
+@section('title', 'Iniciar sesión · LibreApp')
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+@section('content')
+    <div class="row justify-content-center">
+        <div class="col-xl-10">
+            <div class="card shadow border-0 overflow-hidden">
+                <div class="row g-0">
+                    <div class="col-lg-5 auth-side d-none d-lg-flex flex-column justify-content-center p-5">
+                        <i class="bi bi-book-half display-4 mb-3"></i>
+                        <h2 class="h3">Bienvenido de nuevo</h2>
+                        <p class="mb-0">Inicia sesión para solicitar libros y revisar el estado de tus préstamos.</p>
+                    </div>
+
+                    <div class="col-lg-7">
+                        <div class="p-4 p-md-5">
+                            <h1 class="h3 mb-1">Iniciar sesión</h1>
+                            <p class="text-muted mb-4">Ingresa con tu correo y contraseña.</p>
+
+                            @if (session('status'))
+                                <div class="alert alert-success">{{ session('status') }}</div>
+                            @endif
+
+                            <form method="POST" action="{{ route('login') }}">
+                                @csrf
+
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Correo electrónico</label>
+                                    <input id="email" type="email" name="email" value="{{ old('email') }}"
+                                           class="form-control form-control-lg @error('email') is-invalid @enderror"
+                                           required autofocus autocomplete="username">
+                                    @error('email')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="password" class="form-label">Contraseña</label>
+                                    <input id="password" type="password" name="password"
+                                           class="form-control form-control-lg @error('password') is-invalid @enderror"
+                                           required autocomplete="current-password">
+                                    @error('password')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="form-check mb-4">
+                                    <input id="remember_me" type="checkbox" name="remember" class="form-check-input">
+                                    <label for="remember_me" class="form-check-label">Recordarme</label>
+                                </div>
+
+                                <div class="d-grid">
+                                    <button class="btn btn-primary btn-lg">Entrar</button>
+                                </div>
+                            </form>
+
+                            <p class="text-center mt-4 mb-0">
+                                ¿No tienes cuenta? <a href="{{ route('register') }}">Regístrate</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
-                <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
-            </label>
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
-                </a>
-            @endif
-
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+    </div>
+@endsection

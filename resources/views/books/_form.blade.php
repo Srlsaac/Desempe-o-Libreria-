@@ -71,8 +71,7 @@
     <label for="cover_image" class="form-label">Portada</label>
     @if (!empty($book->cover_image))
         <div class="mb-2">
-            <img src="{{ asset('storage/'.$book->cover_image) }}" alt="Portada actual"
-                 style="width: 80px; height: 110px; object-fit: cover;">
+            <img src="{{ asset('storage/'.$book->cover_image) }}" alt="Portada actual" class="thumb-cover-lg">
         </div>
     @endif
     <input type="file" id="cover_image" name="cover_image" accept="image/*"

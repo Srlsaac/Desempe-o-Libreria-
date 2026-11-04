@@ -1,45 +1,39 @@
 @extends('layouts.bootstrap')
 
 @section('content')
-    <h1 class="h3 mb-3">Catálogo de libros</h1>
+    <div class="mb-4">
+        <h1 class="h2 mb-1">Catálogo de libros</h1>
+        <p class="text-muted mb-0">Encuentra tu próxima lectura.</p>
+    </div>
 
     <form method="GET" action="{{ route('catalog.index') }}" class="row g-2 mb-4">
         <div class="col-md-9">
-            <input type="text" name="q" value="{{ $search }}" class="form-control"
-                   placeholder="Buscar por título o autor">
+            <div class="input-group">
+                <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+                <input type="text" name="q" value="{{ $search }}" class="form-control"
+                       placeholder="Buscar por título o autor">
+            </div>
         </div>
         <div class="col-md-3 d-grid">
             <button class="btn btn-primary">Buscar</button>
         </div>
     </form>
 
+    @if ($search)
+        <p class="text-muted">
+            Resultados para <strong>{{ $search }}</strong> &middot;
+            <a href="{{ route('catalog.index') }}">Limpiar búsqueda</a>
+        </p>
+    @endif
+
     <div class="row g-4">
         @forelse ($books as $book)
-            <div class="col-md-4">
-                <div class="card h-100">
-                    @if ($book->cover_image)
-                        <img src="{{ asset('storage/'.$book->cover_image) }}" class="card-img-top" alt="Portada"
-                             style="height: 260px; object-fit: cover;">
-                    @endif
-                    <div class="card-body">
-                        <h5 class="card-title">{{ $book->title }}</h5>
-                        <p class="card-text mb-1">{{ $book->author->name }}</p>
-                        <p class="text-muted small mb-2">{{ $book->category->name }}</p>
-
-                        @if ($book->copies_available > 0)
-                            <span class="badge text-bg-success">Disponible</span>
-                        @else
-                            <span class="badge text-bg-danger">Sin copias</span>
-                        @endif
-                    </div>
-                    <div class="card-footer bg-white border-0">
-                        <a href="{{ route('catalog.show', $book) }}" class="btn btn-outline-primary btn-sm">Ver detalle</a>
-                    </div>
-                </div>
+            <div class="col-sm-6 col-lg-4">
+                @include('partials.book-card')
             </div>
         @empty
             <div class="col-12">
-                <div class="alert alert-info">No se encontraron libros.</div>
+                <div class="alert alert-info mb-0">No se encontraron libros.</div>
             </div>
         @endforelse
     </div>

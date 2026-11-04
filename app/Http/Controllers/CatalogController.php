@@ -2,12 +2,30 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Author;
 use App\Models\Book;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class CatalogController extends Controller
 {
+    public function home(): View
+    {
+        $latest = Book::with(['author', 'category'])
+            ->where('active', true)
+            ->latest()
+            ->take(3)
+            ->get();
+
+        return view('landing', [
+            'latest' => $latest,
+            'booksCount' => Book::where('active', true)->count(),
+            'authorsCount' => Author::count(),
+            'categoriesCount' => Category::count(),
+        ]);
+    }
+
     public function index(Request $request): View
     {
         $search = $request->query('q');

@@ -37,7 +37,7 @@
                     <th class="text-end">Acciones</th>
                 </tr>
                 </thead>
-                <tbody>gi
+                <tbody>
                 @forelse ($loans as $loan)
                     <tr>
                         <td>{{ $loan->book->title }}</td>

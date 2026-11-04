@@ -3,30 +3,36 @@
 @section('content')
     <a href="{{ route('catalog.index') }}" class="btn btn-link px-0 mb-3">&larr; Volver al catálogo</a>
 
-    <div class="card">
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-3 mb-3">
-                    @if ($book->cover_image)
-                        <img src="{{ asset('storage/'.$book->cover_image) }}" class="img-fluid rounded" alt="Portada">
-                    @else
-                        <div class="bg-secondary-subtle rounded d-flex align-items-center justify-content-center"
-                             style="height: 300px;">Sin portada</div>
-                    @endif
+    <div class="card shadow-sm">
+        <div class="card-body p-4">
+            <div class="row g-4">
+                <div class="col-md-4 col-lg-3">
+                    <div class="cover-wrap cover-wrap-lg rounded-3">
+                        <div class="book-cover-placeholder"><i class="bi bi-book"></i></div>
+                        @if ($book->cover_image)
+                            <img src="{{ asset('storage/'.$book->cover_image) }}" alt="Portada de {{ $book->title }}"
+                                 class="cover-img" onerror="this.remove()">
+                        @endif
+                    </div>
                 </div>
 
-                <div class="col-md-9">
-                    <h1 class="h3">{{ $book->title }}</h1>
-                    <p class="mb-1"><strong>Autor:</strong> {{ $book->author->name }}</p>
-                    <p class="mb-1"><strong>Categoría:</strong> {{ $book->category->name }}</p>
-                    @if ($book->year)
-                        <p class="mb-1"><strong>Año:</strong> {{ $book->year }}</p>
-                    @endif
-                    @if ($book->isbn)
-                        <p class="mb-1"><strong>ISBN:</strong> {{ $book->isbn }}</p>
-                    @endif
+                <div class="col-md-8 col-lg-9">
+                    <span class="badge rounded-pill text-bg-light border mb-2">{{ $book->category->name }}</span>
+                    <h1 class="h2">{{ $book->title }}</h1>
+                    <p class="text-muted fs-5">{{ $book->author->name }}</p>
 
-                    <p class="mt-3">{{ $book->description }}</p>
+                    <ul class="list-unstyled text-muted small mb-3">
+                        @if ($book->year)
+                            <li><i class="bi bi-calendar3 me-1"></i>Año: {{ $book->year }}</li>
+                        @endif
+                        @if ($book->isbn)
+                            <li><i class="bi bi-upc me-1"></i>ISBN: {{ $book->isbn }}</li>
+                        @endif
+                    </ul>
+
+                    @if ($book->description)
+                        <p>{{ $book->description }}</p>
+                    @endif
 
                     <p class="mb-3">
                         <strong>Disponibilidad:</strong>
@@ -44,14 +50,14 @@
                             @if ($book->copies_available > 0)
                                 <form method="POST" action="{{ route('loans.store', $book) }}">
                                     @csrf
-                                    <button class="btn btn-primary">Solicitar préstamo</button>
+                                    <button class="btn btn-primary btn-lg">Solicitar préstamo</button>
                                 </form>
                             @else
-                                <button class="btn btn-secondary" disabled>Sin copias disponibles</button>
+                                <button class="btn btn-secondary btn-lg" disabled>Sin copias disponibles</button>
                             @endif
                         @endunless
                     @else
-                        <a href="{{ route('login') }}" class="btn btn-primary">Inicia sesión para solicitar</a>
+                        <a href="{{ route('login') }}" class="btn btn-primary btn-lg">Inicia sesión para solicitar</a>
                     @endauth
                 </div>
             </div>
