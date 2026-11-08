@@ -43,6 +43,10 @@ Route::middleware(['auth', 'admin'])
         Route::patch('loans/{loan}/approve', [AdminLoanController::class, 'approve'])->name('loans.approve');
         Route::patch('loans/{loan}/reject', [AdminLoanController::class, 'reject'])->name('loans.reject');
         Route::patch('loans/{loan}/return', [AdminLoanController::class, 'markReturned'])->name('loans.return');
+
+        Route::get('sentry-test', function () {
+            throw new \RuntimeException('Prueba de Sentry desde LibreApp');
+        })->name('sentry.test');
     });
 
 require __DIR__.'/auth.php';
