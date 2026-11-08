@@ -52,11 +52,25 @@
                                         @enderror
                                     </div>
 
-                                    <div class="col-md-6 mb-4">
+                                    <div class="col-md-6 mb-3">
                                         <label for="password_confirmation" class="form-label">Confirmar contraseña</label>
                                         <input id="password_confirmation" type="password" name="password_confirmation"
                                                class="form-control form-control-lg" required autocomplete="new-password">
                                     </div>
+                                </div>
+
+                                <div class="form-check mb-4">
+                                    <input id="privacy" type="checkbox" name="privacy" value="1"
+                                           class="form-check-input @error('privacy') is-invalid @enderror"
+                                           @checked(old('privacy')) required>
+                                    <label for="privacy" class="form-check-label">
+                                        Autorizo el tratamiento de mis datos personales según la
+                                        <a href="{{ route('privacy') }}" target="_blank" rel="noopener">política de tratamiento de datos</a>
+                                        (Ley 1581 de 2012).
+                                    </label>
+                                    @error('privacy')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                    @enderror
                                 </div>
 
                                 <div class="d-grid">

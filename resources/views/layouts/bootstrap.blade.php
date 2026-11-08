@@ -111,6 +111,7 @@
                 <ul class="list-unstyled small mb-0">
                     <li class="mb-1"><a href="{{ route('home') }}">Inicio</a></li>
                     <li class="mb-1"><a href="{{ route('catalog.index') }}">Catálogo</a></li>
+                    <li class="mb-1"><a href="{{ route('privacy') }}">Política de privacidad</a></li>
                 </ul>
             </div>
             <div class="col-6 col-md-4">

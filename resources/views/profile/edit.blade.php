@@ -22,7 +22,7 @@
 
                         <div class="mb-3">
                             <label for="name" class="form-label">Nombre</label>
-                            <input id="name" type="text" name="name" value="{{ old('name', auth()->user()->name) }}"
+                            <input id="name" type="text" name="name" value="{{ old('name', $user->name) }}"
                                    class="form-control @error('name') is-invalid @enderror" required>
                             @error('name')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -31,7 +31,7 @@
 
                         <div class="mb-3">
                             <label for="email" class="form-label">Correo electrónico</label>
-                            <input id="email" type="email" name="email" value="{{ old('email', auth()->user()->email) }}"
+                            <input id="email" type="email" name="email" value="{{ old('email', $user->email) }}"
                                    class="form-control @error('email') is-invalid @enderror" required>
                             @error('email')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -87,20 +87,56 @@
                 </div>
             </div>
 
-            @unless (auth()->user()->isAdmin())
+            <div class="card shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h2 class="h5">Privacidad y datos personales</h2>
+                    <p class="text-muted small mb-2">
+                        Puedes consultar en cualquier momento cómo tratamos tus datos.
+                    </p>
+
+                    @if ($user->privacy_accepted_at)
+                        <p class="mb-2">
+                            Autorizaste el tratamiento de tus datos el
+                            <strong>{{ $user->privacy_accepted_at->format('d/m/Y \a \l\a\s H:i') }}</strong>
+                            (política versión {{ $user->privacy_policy_version }}).
+                        </p>
+                    @endif
+
+                    <a href="{{ route('privacy') }}" target="_blank" rel="noopener">Leer la política de tratamiento de datos</a>
+                </div>
+            </div>
+
+            @unless ($user->isAdmin())
                 <div class="card shadow-sm border-danger-subtle">
                     <div class="card-body p-4">
                         <h2 class="h5 text-danger">Eliminar cuenta</h2>
                         <p class="text-muted small">
-                            Al eliminar tu cuenta se borran también tus préstamos. Esta acción no se puede deshacer.
+                            Esta acción no se puede deshacer. Al eliminar tu cuenta:
                         </p>
+                        <ul class="text-muted small">
+                            <li>Tu nombre y tu correo se reemplazan por datos genéricos y dejas de poder iniciar sesión.</li>
+                            <li>Tus solicitudes pendientes se rechazan.</li>
+                            <li>El historial de préstamos se conserva sin tus datos personales.</li>
+                            <li>No puedes eliminarla si tienes libros prestados sin devolver.</li>
+                        </ul>
+
+                        @if ($errors->userDeletion->any())
+                            <div class="alert alert-danger">
+                                <ul class="mb-0">
+                                    @foreach ($errors->userDeletion->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
 
                         <button class="btn btn-outline-danger" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#eliminarCuenta" aria-expanded="false">
+                                data-bs-target="#eliminarCuenta"
+                                aria-expanded="{{ $errors->userDeletion->any() ? 'true' : 'false' }}">
                             Eliminar mi cuenta
                         </button>
 
-                        <div class="collapse mt-3 {{ $errors->userDeletion->isNotEmpty() ? 'show' : '' }}" id="eliminarCuenta">
+                        <div class="collapse mt-3 {{ $errors->userDeletion->any() ? 'show' : '' }}" id="eliminarCuenta">
                             <form method="POST" action="{{ route('profile.destroy') }}">
                                 @csrf
                                 @method('DELETE')
@@ -108,10 +144,16 @@
                                 <div class="mb-3">
                                     <label for="delete_password" class="form-label">Confirma tu contraseña</label>
                                     <input id="delete_password" type="password" name="password"
-                                           class="form-control @error('password', 'userDeletion') is-invalid @enderror">
-                                    @error('password', 'userDeletion')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
+                                           class="form-control @error('password', 'userDeletion') is-invalid @enderror"
+                                           autocomplete="current-password">
+                                </div>
+
+                                <div class="form-check mb-3">
+                                    <input id="confirmacion" type="checkbox" name="confirmacion" value="1"
+                                           class="form-check-input">
+                                    <label for="confirmacion" class="form-check-label">
+                                        Entiendo que la eliminación de mi cuenta es definitiva.
+                                    </label>
                                 </div>
 
                                 <button class="btn btn-danger">Eliminar definitivamente</button>

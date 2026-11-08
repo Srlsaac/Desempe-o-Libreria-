@@ -11,6 +11,8 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
+    public const PRIVACY_POLICY_VERSION = '1.0';
+
     protected $fillable = [
         'name',
         'email',
@@ -18,6 +20,9 @@ class User extends Authenticatable
         'role',
         'documento',
         'telefono',
+        'privacy_accepted_at',
+        'privacy_policy_version',
+        'anonymized_at',
     ];
 
     protected $hidden = [
@@ -29,6 +34,8 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'privacy_accepted_at' => 'datetime',
+            'anonymized_at' => 'datetime',
             'password' => 'hashed',
         ];
     }

@@ -6,14 +6,13 @@ use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
-    /**
-     * Display the user's profile form.
-     */
     public function edit(Request $request): View
     {
         return view('profile.edit', [
@@ -21,9 +20,6 @@ class ProfileController extends Controller
         ]);
     }
 
-    /**
-     * Update the user's profile information.
-     */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $request->user()->fill($request->validated());
@@ -34,27 +30,54 @@ class ProfileController extends Controller
 
         $request->user()->save();
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        return redirect()->route('profile.edit')->with('status', 'profile-updated');
     }
 
-    /**
-     * Delete the user's account.
-     */
     public function destroy(Request $request): RedirectResponse
     {
         $request->validateWithBag('userDeletion', [
             'password' => ['required', 'current_password'],
+            'confirmacion' => ['accepted'],
+        ], [
+            'password.required' => 'Escribe tu contraseña para confirmar.',
+            'password.current_password' => 'La contraseña no es correcta.',
+            'confirmacion.accepted' => 'Marca la casilla para confirmar que entiendes las consecuencias.',
         ]);
 
         $user = $request->user();
 
-        Auth::logout();
+        abort_if($user->isAdmin(), 403);
 
-        $user->delete();
+        if ($user->loans()->where('status', 'active')->exists()) {
+            return back()->withErrors([
+                'loans' => 'No puedes eliminar tu cuenta mientras tengas libros prestados. Devuélvelos primero.',
+            ], 'userDeletion');
+        }
+
+        DB::transaction(function () use ($user) {
+            $user->loans()->where('status', 'pending')->update(['status' => 'rejected']);
+            $user->loans()->update(['notes' => null]);
+
+            DB::table('sessions')->where('user_id', $user->id)->delete();
+
+            $user->forceFill([
+                'name' => 'Usuario eliminado',
+                'email' => 'eliminado-'.$user->id.'-'.Str::lower(Str::random(8)).'@eliminado.invalid',
+                'password' => Hash::make(Str::random(40)),
+                'remember_token' => null,
+                'documento' => null,
+                'telefono' => null,
+                'email_verified_at' => null,
+                'anonymized_at' => now(),
+            ])->save();
+        });
+
+        Auth::logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return Redirect::to('/');
+        return redirect()->route('home')
+            ->with('exito', 'Tu cuenta fue eliminada y tus datos personales fueron anonimizados.');
     }
 }
