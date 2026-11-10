@@ -1,0 +1,11 @@
+{
+    "Reset Password Notification": "Restablecer contraseña",
+    "You are receiving this email because we received a password reset request for your account.": "Recibes este correo porque solicitaron restablecer la contraseña de tu cuenta en LibreApp.",
+    "Reset Password": "Restablecer contraseña",
+    "This password reset link will expire in :count minutes.": "Este enlace vencerá en :count minutos.",
+    "If you did not request a password reset, no further action is required.": "Si no solicitaste el cambio, no tienes que hacer nada.",
+    "Hello!": "¡Hola!",
+    "Whoops!": "¡Ups!",
+    "Regards,": "Saludos,",
+    "All rights reserved.": "Todos los derechos reservados."
+}
