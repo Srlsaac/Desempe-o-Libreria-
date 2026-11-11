@@ -9,8 +9,8 @@
                 <div class="col-md-4 col-lg-3">
                     <div class="cover-wrap cover-wrap-lg rounded-3">
                         <div class="book-cover-placeholder"><i class="bi bi-book"></i></div>
-                        @if ($book->cover_image)
-                            <img src="{{ asset('storage/'.$book->cover_image) }}" alt="Portada de {{ $book->title }}"
+                        @if ($book->cover_url)
+                            <img src="{{ $book->cover_url }}" alt="Portada de {{ $book->title }}"
                                  class="cover-img" onerror="this.remove()">
                         @endif
                     </div>

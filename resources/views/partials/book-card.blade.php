@@ -1,8 +1,8 @@
 <div class="card h-100 shadow-sm card-hover">
     <div class="cover-wrap">
         <div class="book-cover-placeholder"><i class="bi bi-book"></i></div>
-        @if ($book->cover_image)
-            <img src="{{ asset('storage/'.$book->cover_image) }}" alt="Portada de {{ $book->title }}"
+        @if ($book->cover_url)
+            <img src="{{ $book->cover_url }}" alt="Portada de {{ $book->title }}"
                  class="cover-img" onerror="this.remove()">
         @endif
     </div>

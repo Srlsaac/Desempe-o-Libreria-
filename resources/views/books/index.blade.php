@@ -24,8 +24,8 @@
                 @forelse ($books as $book)
                     <tr>
                         <td>
-                            @if ($book->cover_image)
-                                <img src="{{ asset('storage/'.$book->cover_image) }}" alt="Portada" class="thumb-cover">
+                            @if ($book->cover_url)
+                                <img src="{{ $book->cover_url }}" alt="Portada" class="thumb-cover">
                             @else
                                 <span class="text-muted">Sin portada</span>
                             @endif

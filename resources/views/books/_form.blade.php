@@ -69,9 +69,9 @@
 
 <div class="mb-3">
     <label for="cover_image" class="form-label">Portada</label>
-    @if (!empty($book->cover_image))
+    @if (isset($book) && $book->cover_url)
         <div class="mb-2">
-            <img src="{{ asset('storage/'.$book->cover_image) }}" alt="Portada actual" class="thumb-cover-lg">
+            <img src="{{ $book->cover_url }}" alt="Portada actual" class="thumb-cover-lg">
         </div>
     @endif
     <input type="file" id="cover_image" name="cover_image" accept="image/*"

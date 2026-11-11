@@ -33,7 +33,7 @@ class BookController extends Controller
         $data['copies_available'] = $data['copies_total'];
 
         if ($request->hasFile('cover_image')) {
-            $data['cover_image'] = $request->file('cover_image')->store('covers', 'public');
+            $data['cover_image'] = $request->file('cover_image')->store('covers');
         }
 
         Book::create($data);
@@ -67,9 +67,9 @@ class BookController extends Controller
 
         if ($request->hasFile('cover_image')) {
             if ($book->cover_image) {
-                Storage::disk('public')->delete($book->cover_image);
+                Storage::delete($book->cover_image);
             }
-            $data['cover_image'] = $request->file('cover_image')->store('covers', 'public');
+            $data['cover_image'] = $request->file('cover_image')->store('covers');
         } else {
             unset($data['cover_image']);
         }
@@ -87,7 +87,7 @@ class BookController extends Controller
         }
 
         if ($book->cover_image) {
-            Storage::disk('public')->delete($book->cover_image);
+            Storage::delete($book->cover_image);
         }
 
         $book->delete();
