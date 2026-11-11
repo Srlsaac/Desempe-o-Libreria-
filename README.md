@@ -176,7 +176,10 @@ Resend es el mailer de Laravel en producción (`MAIL_MAILER=resend`). El remiten
 
 Un monitor HTTP consulta `https://libre.boats` cada 3 minutos. Muestra el estado (Up), el tiempo activo, los incidentes y la gráfica de tiempos de respuesta. No requiere código en la aplicación.
 
+Las alertas se comprobaron con la opción **Send test alert** del monitor: Better Stack envió un correo de incidente de prueba a la cuenta del estudiante. Es el mismo aviso que se recibe ante una caída real del sitio.
+
 ![Better Stack: monitor en estado Up](docs/capturas/04-betterstack-monitor.png)
+![Better Stack: correo de alerta recibido](docs/capturas/13-betterstack-alerta-correo.png)
 
 ### Backblaze B2 — almacenamiento externo
 
